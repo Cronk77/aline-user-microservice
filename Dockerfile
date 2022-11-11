@@ -1,5 +1,5 @@
 # Using maven as base image
-FROM maven:3.8-eclipse-temurin
+FROM maven:3.8-eclipse-temurin as build
 
 # Uncomment out block to run individual containers without compose
 #########################################################################
@@ -32,6 +32,9 @@ COPY . /aline-user-microservice
 WORKDIR /aline-user-microservice/
 RUN mvn -Dmaven.test.skip package
 
-#Run Microservice
-WORKDIR /aline-user-microservice/user-microservice/
-CMD java -jar /aline-user-microservice/user-microservice/target/user-microservice-0.1.0.jar
+# Second layer build(reduce size of image)
+FROM openjdk:8u181-jre-alpine as final
+# Run Program
+WORKDIR /app/
+COPY --from=build /aline-user-microservice/user-microservice/target/user-microservice-0.1.0.jar user_jar
+CMD java -jar user_jar
