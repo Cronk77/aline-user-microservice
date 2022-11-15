@@ -17,7 +17,7 @@ pipeline{
          stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv('aline-sonarqube-server') {
-                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=User-Microservice-Project"
+                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=User-Microservice-Root-Project"
                 }
             }
         }
